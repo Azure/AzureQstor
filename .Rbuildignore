@@ -1,0 +1,9 @@
+^misc$
+^\.vs$
+\.sln$
+\.Rproj$
+\.Rxproj$
+^\.Rproj\.user$
+CONTRIBUTING.md
+^LICENSE\.md$
+azure-pipelines.yml
