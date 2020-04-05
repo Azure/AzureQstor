@@ -1,4 +1,4 @@
-#' Operations on a queue endpoint
+#' Message queues
 #'
 #' Get, list, create, or delete queues.
 #'
@@ -10,162 +10,130 @@
 #' @param x For the print method, a queue object.
 #' @param ... Further arguments passed to lower-level functions.
 #' @export
-queue <- function(endpoint, ...)
+storage_queue <- function(endpoint, ...)
 {
-    UseMethod("queue")
+    UseMethod("storage_queue")
 }
 
 #' @rdname queue
 #' @export
-queue.character <- function(endpoint, key=NULL, token=NULL, sas=NULL,
-                            api_version=getOption("azure_storage_api_version"),
-                            ...)
+storage_queue.character <- function(endpoint, key=NULL, token=NULL, sas=NULL,
+                                    api_version=getOption("azure_storage_api_version"),
+                                    ...)
 {
-    do.call(queue, generate_endpoint(endpoint, key, token, sas, api_version))
+    do.call(storage_queue, generate_endpoint(endpoint, key, token, sas, api_version))
 }
 
 #' @rdname queue
 #' @export
-queue.queue_endpoint <- function(endpoint, name, ...)
+storage_queue.queue_endpoint <- function(endpoint, name, ...)
 {
-    obj <- list(name=name, endpoint=endpoint)
-    class(obj) <- c("queue", "storage_container")
-    obj
-}
-
-#' @rdname queue
-#' @export
-print.queue <- function(x, ...)
-{
-    cat("Azure queue '", x$name, "'\n", sep="")
-    url <- httr::parse_url(x$endpoint$url)
-    url$path <- x$name
-    cat(sprintf("URL: %s\n", httr::build_url(url)))
-
-    if(!is_empty(x$endpoint$key))
-        cat("Access key: <hidden>\n")
-    else cat("Access key: <none supplied>\n")
-
-    if(!is_empty(x$endpoint$token))
-    {
-        cat("Azure Active Directory access token:\n")
-        print(x$endpoint$token)
-    }
-    else cat("Azure Active Directory access token: <none supplied>\n")
-
-    if(!is_empty(x$endpoint$sas))
-        cat("Account shared access signature: <hidden>\n")
-    else cat("Account shared access signature: <none supplied>\n")
-
-    cat(sprintf("Storage API version: %s\n", x$endpoint$api_version))
-    invisible(x)
+    StorageQueue$new(endpoint, name)
 }
 
 
 #' @rdname queue
 #' @export
-list_queues <- function(endpoint, ...)
+list_storage_queues <- function(endpoint, ...)
 {
-    UseMethod("list_queues")
+    UseMethod("list_storage_queues")
 }
 
 #' @rdname queue
 #' @export
-list_queues.character <- function(endpoint, key=NULL, token=NULL, sas=NULL,
-                                  api_version=getOption("azure_storage_api_version"),
-                                  ...)
+list_storage_queues.character <- function(endpoint, key=NULL, token=NULL, sas=NULL,
+                                          api_version=getOption("azure_storage_api_version"),
+                                          ...)
 {
-    do.call(list_queues, generate_endpoint_container(endpoint, key, token, sas, api_version))
+    do.call(list_storage_queues, generate_endpoint_container(endpoint, key, token, sas, api_version))
 }
 
 #' @rdname queue
 #' @export
-list_queues.queue_endpoint <- function(endpoint, ...)
+list_storage_queues.queue_endpoint <- function(endpoint, ...)
 {
     res <- call_storage_endpoint(endpoint, "/", options=list(comp="list"))
-    lst <- lapply(res$Queue, function(cont) queue(endpoint, cont$Name[[1]]))
+    lst <- lapply(res$Queue, function(cont) storage_queue(endpoint, cont$Name[[1]]))
 
     while(length(res$NextMarker) > 0)
     {
         res <- call_storage_endpoint(endpoint, "/", options=list(comp="list", marker=res$NextMarker[[1]]))
-        lst <- c(lst, lapply(res$Queue, function(cont) queue(endpoint, cont$Name[[1]])))
+        lst <- c(lst, lapply(res$Queue, function(cont) storage_queue(endpoint, cont$Name[[1]])))
     }
     named_list(lst)
 }
 
 #' @rdname queue
 #' @export
-list_storage_containers.queue <- function(endpoint, ...)
-list_queues(endpoint, ...)
+list_storage_containers.queue_endpoint <- function(endpoint, ...)
+list_storage_queues(endpoint, ...)
 
 
 
 #' @rdname queue
 #' @export
-create_queue <- function(endpoint, ...)
+create_storage_queue <- function(endpoint, ...)
 {
-    UseMethod("create_queue")
+    UseMethod("create_storage_queue")
 }
 
 #' @rdname queue
 #' @export
-create_queue.character <- function(endpoint, key=NULL, token=NULL, sas=NULL,
-                                   api_version=getOption("azure_storage_api_version"),
-                                   ...)
-{
-    endp <- generate_endpoint_container(endpoint, key, token, sas, api_version)
-    create_queue(endp$endpoint, endp$name, ...)
-}
-
-#' @rdname queue
-#' @export
-create_queue.queue <- function(endpoint, ...)
-{
-    create_queue(endpoint$endpoint, endpoint$name)
-}
-
-#' @rdname queue
-#' @export
-create_queue.queue_endpoint <- function(endpoint, name, ...)
-{
-    obj <- queue(endpoint, name)
-    do_container_op(obj, http_verb="PUT")
-    obj
-}
-
-
-
-#' @rdname queue
-#' @export
-delete_queue <- function(endpoint, ...)
-{
-    UseMethod("delete_queue")
-}
-
-#' @rdname queue
-#' @export
-delete_queue.character <- function(endpoint, key=NULL, token=NULL, sas=NULL,
-                                             api_version=getOption("azure_storage_api_version"),
-                                             ...)
+create_storage_queue.character <- function(endpoint, key=NULL, token=NULL, sas=NULL,
+                                           api_version=getOption("azure_storage_api_version"),
+                                           ...)
 {
     endp <- generate_endpoint_container(endpoint, key, token, sas, api_version)
-    delete_queue(endp$endpoint, endp$name, ...)
+    create_storage_queue(endp$endpoint, endp$name, ...)
 }
 
 #' @rdname queue
 #' @export
-delete_queue.queue <- function(endpoint, ...)
+create_storage_queue.queue_endpoint <- function(endpoint, name, ...)
 {
-    delete_queue(endpoint$endpoint, endpoint$name, ...)
+    obj <- storage_queue(endpoint, name)
+    create_storage_queue(obj)
 }
 
 #' @rdname queue
 #' @export
-delete_queue.queue_endpoint <- function(endpoint, name, confirm=TRUE, ...)
+create_storage_queue.StorageQueue <- function(endpoint, ...)
 {
-    if(!delete_confirmed(confirm, paste0(endpoint$url, name), "queue"))
-        return(invisible(NULL))
-
-    obj <- queue(endpoint, name)
-    invisible(do_container_op(obj, http_verb="DELETE"))
+    endpoint$create()
 }
+
+
+
+#' @rdname queue
+#' @export
+delete_storage_queue <- function(endpoint, ...)
+{
+    UseMethod("delete_storage_queue")
+}
+
+#' @rdname queue
+#' @export
+delete_storage_queue.character <- function(endpoint, key=NULL, token=NULL, sas=NULL,
+                                           api_version=getOption("azure_storage_api_version"),
+                                           ...)
+{
+    endp <- generate_endpoint_container(endpoint, key, token, sas, api_version)
+    delete_storage_queue(endp$endpoint, endp$name, ...)
+}
+
+#' @rdname queue
+#' @export
+delete_storage_queue.queue_endpoint <- function(endpoint, name, ...)
+{
+
+    obj <- storage_queue(endpoint, name)
+    delete_storage_queue(obj, ...)
+}
+
+#' @rdname queue
+#' @export
+delete_storage_queue.StorageQueue <- function(endpoint, confirm=TRUE, ...)
+{
+    endpoint$delete(confirm=confirm)
+}
+
