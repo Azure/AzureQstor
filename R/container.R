@@ -7,8 +7,8 @@
 #' @param api_version If an endpoint object is not supplied, the storage API version to use when interacting with the host. Currently defaults to `"2019-07-07"`.
 #' @param name The name of the queue to get, create, or delete.
 #' @param confirm For deleting a queue, whether to ask for confirmation.
-#' @param x For the print method, a queue object.
 #' @param ... Further arguments passed to lower-level functions.
+#' @rdname queue
 #' @export
 storage_queue <- function(endpoint, ...)
 {
@@ -21,7 +21,7 @@ storage_queue.character <- function(endpoint, key=NULL, token=NULL, sas=NULL,
                                     api_version=getOption("azure_storage_api_version"),
                                     ...)
 {
-    do.call(storage_queue, generate_endpoint(endpoint, key, token, sas, api_version))
+    do.call(storage_queue, generate_endpoint_container(endpoint, key, token, sas, api_version))
 }
 
 #' @rdname queue

@@ -6,4 +6,5 @@
 ^\.Rproj\.user$
 CONTRIBUTING.md
 ^LICENSE\.md$
+^SECURITY\.md$
 azure-pipelines.yml

@@ -18,5 +18,7 @@ Imports:
     openssl,
     xml2,
     httr
+Suggests:
+    testthat
 Roxygen: list(markdown=TRUE)
 RoxygenNote: 7.1.0
