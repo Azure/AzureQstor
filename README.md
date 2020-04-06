@@ -1,6 +1,8 @@
 # AzureQstor
 
-An interface to Azure queue storage, building on the functionality provided by [AzureStor](https://github.com/Azure/AzureStor).
+An R interface to Azure queue storage, building on the functionality provided by [AzureStor](https://github.com/Azure/AzureStor).
+
+Azure queue storage is a service for storing large numbers of messages that can be accessed from anywhere in the world via authenticated calls using HTTP or HTTPS. A single queue message can be up to 64 KB in size, and a queue can contain millions of messages, up to the total capacity limit of a storage account. Queue storage is often used to create a backlog of work to process asynchronously.
 
 AzureQstor uses a combination of S3 and R6 classes. The queue endpoint is an S3 object for compatibility with AzureStor, while R6 classes are used to represent queues and messages.
 

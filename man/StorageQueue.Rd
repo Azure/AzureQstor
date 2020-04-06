@@ -2,11 +2,56 @@
 % Please edit documentation in R/StorageQueue.R
 \name{StorageQueue}
 \alias{StorageQueue}
+\alias{queue}
 \title{R6 class representing an Azure storage queue}
 \description{
-R6 class representing an Azure storage queue
+A storage queue holds messages. A queue can contain an unlimited number of messages, each of which can be up to 64KB in size. Messages are generally added to the end of the queue and retrieved from the front of the queue, although first in, first out (FIFO) behavior is not guaranteed.
 
-R6 class representing an Azure storage queue
+To generate a queue object, use one of the \code{\link{storage_queue}}, \code{\link{list_storage_queues}} or \code{\link{create_storage_queue}} functions rather than calling the \code{new()} method directly.
+}
+\examples{
+\dontrun{
+
+endp <- storage_endpoint("https://mystorage.queue.core.windows.net", key="key")
+
+# to talk to an existing queue
+queue <- storage_queue(endp, "queue1")
+
+# to create a new queue
+queue2 <- create_storage_queue(endp, "queue2")
+
+# various ways to delete a queue (will ask for confirmation first)
+queue2$delete()
+delete_storage_queue(queue2)
+delete_storage_queue(endp, "queue2")
+
+# to get all queues in this storage account
+queue_lst <- list_storage_queues(endp)
+
+# working with a queue: put, get, update and delete messages
+queue$put_message("new message")
+msg <- queue$get_message()
+msg$update(visibility_timeout=60, text="updated message")
+queue$delete_message(msg)
+
+# delete_message simply calls the message's delete() method, so this is equivalent
+msg$delete()
+
+# retrieving multiple messages at a time (up to 32)
+msgs <- queue$get_messages(30)
+
+# deleting is still per-message
+lapply(msgs, function(m) m$delete())
+
+# you can use the process pool from AzureRMR to do this in parallel
+AzureRMR::init_pool()
+AzureRMR::pool_lapply(msgs, function(m) m$delete())
+AzureRMR::delete_pool()
+
+}
+}
+\seealso{
+\code{\link{QueueMessage}}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -31,6 +76,8 @@ R6 class representing an Azure storage queue
 \item \href{#method-pop_message}{\code{StorageQueue$pop_message()}}
 \item \href{#method-pop_messages}{\code{StorageQueue$pop_messages()}}
 \item \href{#method-put_message}{\code{StorageQueue$put_message()}}
+\item \href{#method-update_message}{\code{StorageQueue$update_message()}}
+\item \href{#method-delete_message}{\code{StorageQueue$delete_message()}}
 \item \href{#method-clone}{\code{StorageQueue$clone()}}
 }
 }
@@ -38,7 +85,9 @@ R6 class representing an Azure storage queue
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize the queue. Rather than calling this directly, you should use one of the \code{\link{storage_queue}}, \code{\link{list_storage_queues}} or \code{\link{create_storage_queue}} functions.
+Initialize the queue object. Rather than calling this directly, you should use one of the \code{\link{storage_queue}}, \code{\link{list_storage_queues}} or \code{\link{create_storage_queue}} functions.
+
+Note that initializing this object is a local operation only. If a queue of the given name does not already exist in the storage account, it has to be created remotely by calling the \code{create} method.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{StorageQueue$new(endpoint, name)}\if{html}{\out{</div>}}
 }
@@ -52,16 +101,12 @@ Initialize the queue. Rather than calling this directly, you should use one of t
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Details}{
-Initializing this R6 object does not touch the server. If a queue of the given name does not already exist, it has to be created by calling the \code{create} method.
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-create"></a>}}
 \if{latex}{\out{\hypertarget{method-create}{}}}
 \subsection{Method \code{create()}}{
-Creates a storage queue in Azure, using the storage endpoint and name stored in this R6 object.
+Creates a storage queue in Azure, using the storage endpoint and name from this R6 object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{StorageQueue$create()}\if{html}{\out{</div>}}
 }
@@ -98,7 +143,9 @@ Clears (deletes) all messages in this storage queue.
 \if{html}{\out{<a id="method-get_message"></a>}}
 \if{latex}{\out{\hypertarget{method-get_message}{}}}
 \subsection{Method \code{get_message()}}{
-Reads a message from the front of the storage queue. The message is then marked as read, but must still be deleted manually.
+Reads a message from the front of the storage queue.
+
+When a message is read, the consumer is expected to process the message and then delete it. After the message is read, it is made invisible to other consumers for a specified interval. If the message has not yet been deleted at the time the interval expires, its visibility is restored, so that another consumer may process it.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{StorageQueue$get_message()}\if{html}{\out{</div>}}
 }
@@ -111,7 +158,9 @@ A new object of class \code{\link{QueueMessage}}.
 \if{html}{\out{<a id="method-get_messages"></a>}}
 \if{latex}{\out{\hypertarget{method-get_messages}{}}}
 \subsection{Method \code{get_messages()}}{
-Reads several messages at once from the front of the storage queue. The messages are marked as read, but must still be deleted manually.
+Reads several messages at once from the front of the storage queue.
+
+When a message is read, the consumer is expected to process the message and then delete it. After the message is read, it is made invisible to other consumers for a specified interval. If the message has not yet been deleted at the time the interval expires, its visibility is restored, so that another consumer may process it.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{StorageQueue$get_messages(n = 1)}\if{html}{\out{</div>}}
 }
@@ -131,7 +180,9 @@ A list of objects of class \code{\link{QueueMessage}}.
 \if{html}{\out{<a id="method-peek_message"></a>}}
 \if{latex}{\out{\hypertarget{method-peek_message}{}}}
 \subsection{Method \code{peek_message()}}{
-Reads a message from the storage queue, but does not mark it as read.
+Reads a message from the storage queue, but does not alter its visibility.
+
+Note that a message obtained via the \code{peek_message} or \code{peek_messages} method will not include a pop receipt, which is required to delete or update it.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{StorageQueue$peek_message()}\if{html}{\out{</div>}}
 }
@@ -144,7 +195,9 @@ A new object of class \code{\link{QueueMessage}}.
 \if{html}{\out{<a id="method-peek_messages"></a>}}
 \if{latex}{\out{\hypertarget{method-peek_messages}{}}}
 \subsection{Method \code{peek_messages()}}{
-Reads several messages at once from the storage queue, without marking them as read.
+Reads several messages at once from the storage queue, without altering their visibility.
+
+Note that a message obtained via the \code{peek_message} or \code{peek_messages} method will not include a pop receipt, which is required to delete or update it.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{StorageQueue$peek_messages(n = 1)}\if{html}{\out{</div>}}
 }
@@ -164,7 +217,7 @@ A list of objects of class \code{\link{QueueMessage}}.
 \if{html}{\out{<a id="method-pop_message"></a>}}
 \if{latex}{\out{\hypertarget{method-pop_message}{}}}
 \subsection{Method \code{pop_message()}}{
-Reads a message from the storage queue, and then deletes it.
+Reads a message from the storage queue, removing it at the same time. This is equivalent to calling \href{#method-get_message}{\code{get_message}} and \href{#method-delete_message}{\code{delete_message}} successively.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{StorageQueue$pop_message()}\if{html}{\out{</div>}}
 }
@@ -177,7 +230,7 @@ A new object of class \code{\link{QueueMessage}}.
 \if{html}{\out{<a id="method-pop_messages"></a>}}
 \if{latex}{\out{\hypertarget{method-pop_messages}{}}}
 \subsection{Method \code{pop_messages()}}{
-Reads several messages at once from the storage queue, and then deletes them.
+Reads several messages at once from the storage queue, and then removes them.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{StorageQueue$pop_messages(n = 1)}\if{html}{\out{</div>}}
 }
@@ -205,11 +258,51 @@ Writes a message to the back of the message queue.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{text}}{The message text, either a raw or character vector. If a raw vector, it is base64-encoded, and if a character vector, it is pasted into a single string before being sent to the queue.}
+\item{\code{text}}{The message text, either a raw or character vector. If a raw vector, it is base64-encoded, and if a character vector, it is collapsed into a single string before being sent to the queue.}
 
-\item{\code{visibility_timeout}}{Optional visibility timeout after being read, in seconds.}
+\item{\code{visibility_timeout}}{Optional visibility timeout after being read, in seconds. The default is 30 seconds.}
 
 \item{\code{time_to_live}}{Optional message time-to-live, in seconds. The default is 7 days.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-update_message"></a>}}
+\if{latex}{\out{\hypertarget{method-update_message}{}}}
+\subsection{Method \code{update_message()}}{
+Updates a message in the queue. This requires that the message object must include a pop receipt, which is present if it was obtained by means other than \href{#method-peek_message}{peeking}.
+
+This operation can be used to continually extend the invisibility of a queue message. This functionality can be useful if you want a worker role to "lease" a message. For example, if a worker role calls \href{#method-get_messages}{\code{get_messages}} and recognizes that it needs more time to process a message, it can continually extend the message's invisibility until it is processed. If the worker role were to fail during processing, eventually the message would become visible again and another worker role could process it.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{StorageQueue$update_message(msg, visibility_timeout, text = msg$text)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{msg}}{A message object, of class \code{\link{QueueMessage}}.}
+
+\item{\code{visibility_timeout}}{The new visibility timeout (time to when the message will again be visible).}
+
+\item{\code{text}}{Optionally, new message text, either a raw or character vector. If a raw vector, it is base64-encoded, and if a character vector, it is collapsed into a single string before being sent to the queue.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete_message"></a>}}
+\if{latex}{\out{\hypertarget{method-delete_message}{}}}
+\subsection{Method \code{delete_message()}}{
+Deletes a message from the queue. This requires that the message object must include a pop receipt, which is present if it was obtained by means other than \href{#method-peek_message}{peeking}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{StorageQueue$delete_message(msg)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{msg}}{A message object, of class \code{\link{QueueMessage}}.}
 }
 \if{html}{\out{</div>}}
 }

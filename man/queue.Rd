@@ -89,6 +89,32 @@ delete_storage_queue(endpoint, ...)
 
 \item{confirm}{For deleting a queue, whether to ask for confirmation.}
 }
+\value{
+For \code{storage_queue} and \code{create_storage_queue}, an object of class \code{\link{StorageQueue}}. For \code{list_storage_queues}, a list of such objects.
+}
 \description{
 Get, list, create, or delete queues.
+}
+\details{
+You can call these functions in a couple of ways: by passing the full URL of the storage queue, or by passing the endpoint object and the name of the share as a string.
+}
+\examples{
+\dontrun{
+
+endp <- storage_endpoint("https://mystorage.queue.core.windows.net", key="key")
+
+# to talk to an existing queue
+queue <- storage_queue(endp, "queue1")
+
+# to create a new queue
+queue2 <- create_storage_queue(endp, "queue2")
+
+# various ways to delete a queue (will ask for confirmation first)
+queue2$delete()
+delete_storage_queue(queue2)
+delete_storage_queue(endp, "queue2")
+}
+}
+\seealso{
+\code{\link{StorageQueue}}, \code{\link{queue_endpoint}}
 }

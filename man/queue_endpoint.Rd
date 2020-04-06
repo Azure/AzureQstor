@@ -33,11 +33,11 @@ This is the queue storage counterpart to the endpoint functions defined in the A
 \dontrun{
 
 # obtaining an endpoint from the storage account resource object
-stor <- AzureRMR::get_azure_login()$
+AzureRMR::get_azure_login()$
     get_subscription("sub_id")$
     get_resource_group("rgname")$
-    get_storage_account("mystorage")
-stor$get_queue_endpoint()
+    get_storage_account("mystorage")$
+    get_queue_endpoint()
 
 # creating an endpoint standalone
 queue_endpoint("https://mystorage.queue.core.windows.net/", key="access_key")
@@ -45,5 +45,5 @@ queue_endpoint("https://mystorage.queue.core.windows.net/", key="access_key")
 }
 }
 \seealso{
-\code{\link[AzureStor:storage_endpoint]{AzureStor::storage_endpoint}}, \code{\link[AzureStor:blob_endpoint]{AzureStor::blob_endpoint}}
+\code{\link[AzureStor:storage_endpoint]{AzureStor::storage_endpoint}}, \code{\link[AzureStor:blob_endpoint]{AzureStor::blob_endpoint}}, \code{\link{storage_queue}}
 }
