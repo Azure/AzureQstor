@@ -48,6 +48,7 @@ msg$delete()
 \item \href{#method-new}{\code{QueueMessage$new()}}
 \item \href{#method-delete}{\code{QueueMessage$delete()}}
 \item \href{#method-update}{\code{QueueMessage$update()}}
+\item \href{#method-print}{\code{QueueMessage$print()}}
 \item \href{#method-clone}{\code{QueueMessage$clone()}}
 }
 }
@@ -97,6 +98,23 @@ This operation can be used to continually extend the invisibility of a queue mes
 \item{\code{visibility_timeout}}{The new visibility timeout (time to when the message will again be visible).}
 
 \item{\code{text}}{Optionally, new message text, either a raw or character vector. If a raw vector, it is base64-encoded, and if a character vector, it is collapsed into a single string before being sent to the queue.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
+\subsection{Method \code{print()}}{
+Print method for this class.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{QueueMessage$print(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Not currently used.}
 }
 \if{html}{\out{</div>}}
 }

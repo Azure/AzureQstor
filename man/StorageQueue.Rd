@@ -80,6 +80,7 @@ AzureRMR::delete_pool()
 \item \href{#method-put_message}{\code{StorageQueue$put_message()}}
 \item \href{#method-update_message}{\code{StorageQueue$update_message()}}
 \item \href{#method-delete_message}{\code{StorageQueue$delete_message()}}
+\item \href{#method-print}{\code{StorageQueue$print()}}
 \item \href{#method-clone}{\code{StorageQueue$clone()}}
 }
 }
@@ -340,6 +341,23 @@ Deletes a message from the queue. This requires that the message object must inc
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{msg}}{A message object, of class \code{\link{QueueMessage}}.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
+\subsection{Method \code{print()}}{
+Print method for this class.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{StorageQueue$print(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Not currently used.}
 }
 \if{html}{\out{</div>}}
 }

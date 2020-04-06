@@ -96,6 +96,19 @@ public=list(
         self$next_visible_time <- res$`x-ms-next-visible-time`
         self$text <- text
         invisible(self)
+    },
+
+    #' @description
+    #' Print method for this class.
+    #' @param ... Not currently used.
+    print=function(...)
+    {
+        cat("<queue message ", self$id, ">\n", sep="")
+        cat("  insertion time: ", self$insertion_time, "\n")
+        cat("  expiration time:", self$expiry_time, "\n")
+        cat("---\n")
+        cat(self$text, "\n", sep="")
+        invisible(self)
     }
 ),
 

@@ -242,6 +242,18 @@ public=list(
     {
         stopifnot(inherits(msg, "QueueMessage"))
         msg$delete()
+    },
+
+    #' @description
+    #' Print method for this class.
+    #' @param ... Not currently used.
+    print=function(...)
+    {
+        url <- httr::parse_url(self$endpoint$url)
+        url$path <- self$name
+        cat("<Azure storage queue '", self$name, "'>\n", sep="")
+        cat("url: ", httr::build_url(url), "\n", sep="")
+        invisible(self)
     }
 ))
 
