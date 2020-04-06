@@ -1,6 +1,10 @@
 # AzureQstor
 
+[![Build Status](https://asiadatascience.visualstudio.com/AzureR/_apis/build/status/Azure.AzureQstor?branchName=master)](https://asiadatascience.visualstudio.com/AzureR/_build/latest?definitionId=18&branchName=master)
+
 An R interface to Azure queue storage, building on the functionality provided by [AzureStor](https://github.com/Azure/AzureStor).
+
+The primary repo for this package is at https://github.com/Azure/AzureQstor; please submit issues and PRs there. It is also mirrored at the Cloudyr org at https://github.com/cloudyr/AzureQstor. You can install the development version of the package with `devtools::install_github("Azure/AzureQstor")`.
 
 Azure queue storage is a service for storing large numbers of messages that can be accessed from anywhere in the world via authenticated calls using HTTP or HTTPS. A single queue message can be up to 64 KB in size, and a queue can contain millions of messages, up to the total capacity limit of a storage account. Queue storage is often used to create a backlog of work to process asynchronously.
 

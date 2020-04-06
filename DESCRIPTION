@@ -19,6 +19,9 @@ Imports:
     xml2,
     httr
 Suggests:
-    testthat
+    testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
 Roxygen: list(markdown=TRUE)
 RoxygenNote: 7.1.0

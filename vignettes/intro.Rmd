@@ -1,0 +1,93 @@
+---
+title: "Introduction to AzureQstor"
+author: Hong Ooi
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to AzureQstor}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{utf8}
+---
+
+## Azure queue storage
+
+[Azure queue storage](https://azure.microsoft.com/services/storage/queues/) is a service for storing large numbers of messages that can be accessed from anywhere in the world via authenticated calls using HTTP or HTTPS. A single queue message can be up to 64 KB in size, and a queue can contain millions of messages, up to the total capacity limit of a storage account. Queue storage is often used to create a backlog of work to process asynchronously.
+
+AzureQstor is an R interface to queue storage, building on the functionality provided by the [AzureStor](https://github.com/Azure/AzureStor) package. You can easily create and delete queues, and read and write messages to queues.
+
+## Queue endpoint
+
+AzureQstor uses a combination of S3 and R6 classes. The queue endpoint is an S3 object for compatibility with AzureStor. It has methods for creating, retrieving and deleting queues that mirror those in AzureStor for ADLS2, blob and file storage.
+
+```r
+library(AzureQstor)
+
+endp <- storage_endpoint("https://mystorage.queue.core.windows.net", key="access_key")
+
+# creating, retrieving and deleting queues
+qu <- create_storage_queue(endp, "myqueue")
+qu2 <- storage_queue(endp, "myotherqueue")
+delete_storage_queue(qu2, confirm=FALSE)
+
+# list all storage queues in this account
+list_storage_queues(endp)
+```
+
+## Queues and messages
+
+Queues and messages are represented using R6 classes. The `list_storage_queues`, `storage_queue` and `create_storage_queue` calls above return objects of class `StorageQueue`, which has methods for reading, writing, updating and deleting messages.
+
+```r
+qu <- storage_queue(endp, "myqueue")
+
+# write a message to the back of the queue
+qu$put("New message")
+
+# read a message from the front of the queue
+msg <- qu$get_message()
+```
+
+Once we have read a message, we have a time window (by default 30 seconds) in which to process it. During this window, the message still exists in the queue, but is invisible: further requests for messages will skip over it. If we need more time to process a message, we can update it on the queue to extend the invisibility window.
+
+```r
+qu$update_message(msg, visibility_timeout=60)
+```
+
+Once we are done with the message, we delete it from the queue:
+
+```r
+qu$delete_message(msg)
+```
+
+To retrieve a message from a queue without affecting its visibility, we can use the `peek_message` method. This can be useful if we only want to examine a message's contents without any further processing.
+
+```r
+msg <- qu$peek_message()
+```
+
+The `StorageQueue` class also provides methods to retrieve multiple messages at once, to a maximum of 32.
+
+```r
+# read a batch of 30 messages; returns a list of message objects
+qu$read_messages(n=30)
+
+# peek at the next 30 messages
+qu$peek_messages(n=30)
+```
+
+Messages themselves are objects of class `QueueMessage`, which has methods for updates and deletes. In fact, the above `delete_message` and `update_message` queue methods simply call the corresponding method in the message object.
+
+```r
+msg <- qu$get_message()
+msg$update(visibility_timeout=60)
+msg$delete()
+```
+
+The content of a message is in its `text` field, which will (usually) be a text string.
+
+```r
+msg$text
+## [1] New message
+```
+
+
+
