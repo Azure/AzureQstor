@@ -1,4 +1,4 @@
-context("Queue client interface")
+context("Queue endpoint")
 
 tenant <- Sys.getenv("AZ_TEST_TENANT_ID")
 app <- Sys.getenv("AZ_TEST_APP_ID")
@@ -18,9 +18,10 @@ sub <- AzureRMR::az_rm$new(tenant=tenant, app=app, password=password)$get_subscr
 stor <- sub$get_resource_group(rgname)$get_storage_account(storname)
 options(azure_storage_progress_bar=FALSE)
 
-test_that("Queue client interface works",
+qu <- stor$get_queue_endpoint()
+
+test_that("Queue endpoint works",
 {
-    qu <- stor$get_queue_endpoint()
     qu2 <- queue_endpoint(stor$properties$primaryEndpoints$queue, key=stor$list_keys()[1])
     expect_is(qu, "queue_endpoint")
     expect_identical(qu, qu2)
@@ -44,7 +45,6 @@ test_that("Queue client interface works",
 
 
 teardown({
-    qu <- stor$get_queue_endpoint()
     lst <- list_storage_queues(qu)
     lapply(lst, delete_storage_queue, confirm=FALSE)
 })
