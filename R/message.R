@@ -5,10 +5,20 @@ new_message <- function(message, queue)
 }
 
 
+#' R6 class representing a message from an Azure storage queue
+#' @export
 QueueMessage <- R6::R6Class("QueueMessage",
 
 public=list(
 
+    #' @field queue The queue this message is from, an object of class [`StorageQueue`]
+    #' @field id The message ID.
+    #' @field insertion_time The message insertion (creation) time.
+    #' @field expiry_time The message expiration time.
+    #' @field text The message text.
+    #' @field receipt A pop receipt. This is populated if the message was retrieved via a `get_message` or `update` call, and is necessary for deleting or further updating the message.
+    #' @field next_visible_time The time when this message will be next visible.
+    #' @field dequeue_count The number of times this message has been read.
     queue=NULL,
     id=NULL,
     insertion_time=NULL,
@@ -18,6 +28,10 @@ public=list(
     next_visible_time=NULL,
     dequeue_count=NULL,
 
+    #' @description
+    #' Creates a new message object. Rather than calling the `initialize` method manually, objects of this class should be created via the methods exposed by the [`StorageQueue`] object.
+    #' @param message Details about the message.
+    #' @param queue Object of class `StorageQueue.
     initialize=function(message, queue)
     {
         self$queue <- queue
@@ -30,6 +44,8 @@ public=list(
         self$dequeue_count <- message$DequeueCount
     },
 
+    #' @description
+    #' Deletes this message from the queue.
     delete=function()
     {
         private$check_receipt()
@@ -38,6 +54,10 @@ public=list(
         invisible(NULL)
     },
 
+    #' @description
+    #' Updates this message in the queue.
+    #' @param visibility_timeout The new visibility timeout (time to when the message will again be visible).
+    #' @param text Optionally, new message text.
     update=function(visibility_timeout, text=self$text)
     {
         private$check_receipt()

@@ -14,7 +14,7 @@ Depends:
 Imports: 
     utils,
     AzureRMR (>= 2.0.0),
-    AzureStor (>= 3.1.1),
+    AzureStor (>= 3.0.0),
     openssl,
     xml2,
     httr
