@@ -32,7 +32,7 @@ public=list(
     #' @field insertion_time The message insertion (creation) time.
     #' @field expiry_time The message expiration time.
     #' @field text The message text.
-    #' @field receipt A pop receipt. This is present if the message was obtained by means other than [peeking][StorageQueue#method-peek_message], and is required for updating or deleting the message.
+    #' @field receipt A pop receipt. This is present if the message was obtained by means other than [peeking][StorageQueue], and is required for updating or deleting the message.
     #' @field next_visible_time The time when this message will be next visible.
     #' @field dequeue_count The number of times this message has been read.
     queue=NULL,
@@ -73,7 +73,7 @@ public=list(
     #' @description
     #' Updates this message in the queue.
     #'
-    #' This operation can be used to continually extend the invisibility of a queue message. This functionality can be useful if you want a worker role to "lease" a message. For example, if a worker role calls [`get_messages`][StorageQueue#method-get_messages] and recognizes that it needs more time to process a message, it can continually extend the message's invisibility until it is processed. If the worker role were to fail during processing, eventually the message would become visible again and another worker role could process it.
+    #' This operation can be used to continually extend the invisibility of a queue message. This functionality can be useful if you want a worker role to "lease" a message. For example, if a worker role calls [`get_messages`][StorageQueue] and recognizes that it needs more time to process a message, it can continually extend the message's invisibility until it is processed. If the worker role were to fail during processing, eventually the message would become visible again and another worker role could process it.
     #' @param visibility_timeout The new visibility timeout (time to when the message will again be visible).
     #' @param text Optionally, new message text, either a raw or character vector. If a raw vector, it is base64-encoded, and if a character vector, it is collapsed into a single string before being sent to the queue.
     update=function(visibility_timeout, text=self$text)

@@ -34,7 +34,7 @@ msg$delete()
 
 \item{\code{text}}{The message text.}
 
-\item{\code{receipt}}{A pop receipt. This is present if the message was obtained by means other than \link[=StorageQueue#method-peek_message]{peeking}, and is required for updating or deleting the message.}
+\item{\code{receipt}}{A pop receipt. This is present if the message was obtained by means other than \link[=StorageQueue]{peeking}, and is required for updating or deleting the message.}
 
 \item{\code{next_visible_time}}{The time when this message will be next visible.}
 
@@ -86,7 +86,7 @@ Deletes this message from the queue.
 \subsection{Method \code{update()}}{
 Updates this message in the queue.
 
-This operation can be used to continually extend the invisibility of a queue message. This functionality can be useful if you want a worker role to "lease" a message. For example, if a worker role calls \code{\link[=StorageQueue#method-get_messages]{get_messages}} and recognizes that it needs more time to process a message, it can continually extend the message's invisibility until it is processed. If the worker role were to fail during processing, eventually the message would become visible again and another worker role could process it.
+This operation can be used to continually extend the invisibility of a queue message. This functionality can be useful if you want a worker role to "lease" a message. For example, if a worker role calls \code{\link[=StorageQueue]{get_messages}} and recognizes that it needs more time to process a message, it can continually extend the message's invisibility until it is processed. If the worker role were to fail during processing, eventually the message would become visible again and another worker role could process it.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{QueueMessage$update(visibility_timeout, text = self$text)}\if{html}{\out{</div>}}
 }

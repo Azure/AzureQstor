@@ -14,12 +14,16 @@ utils::globalVariables(c("self", "private"))
 }
 
 
-# assorted imports of unexported functions
+# assorted imports of friend functions
 delete_confirmed <- getNamespace("AzureStor")$delete_confirmed
 
 is_endpoint_url <- getNamespace("AzureStor")$is_endpoint_url
 
 generate_endpoint_container <- getNamespace("AzureStor")$generate_endpoint_container
+
+get_classic_metadata_headers <- getNamespace("AzureStor")$get_classic_metadata_headers
+
+set_classic_metadata_headers <- getNamespace("AzureStor")$set_classic_metadata_headers
 
 
 # tag xml2 to satisfy R CMD check

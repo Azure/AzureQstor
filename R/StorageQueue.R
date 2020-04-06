@@ -99,12 +99,40 @@ public=list(
     },
 
     #' @description
+    #' Retrieves user-defined metadata for the queue.
+    #' @return
+    #' A named list of metadata properties.
+    get_metadata=function()
+    {
+        res <- do_container_op(self, "", options=list(comp="metadata"), http_verb="HEAD")
+        get_classic_metadata_headers(res)
+    },
+
+    #' @description
+    #' Sets user-defined metadata for the queue.
+    #' @param ... Name-value pairs to set as metadata.
+    #' @param keep_existing Whether to retain existing metadata information.
+    #' @return
+    #' A named list of metadata properties, invisibly.
+    set_metadata=function(..., keep_existing=TRUE)
+    {
+        meta <- if(keep_existing)
+            utils::modifyList(self$get_metadata(), list(...))
+        else list(...)
+
+        do_container_op(self, options=list(comp="metadata"), headers=set_classic_metadata_headers(meta),
+                        http_verb = "PUT")
+        invisible(meta)
+    },
+
+    #' @description
     #' Reads a message from the front of the storage queue.
     #'
     #' When a message is read, the consumer is expected to process the message and then delete it. After the message is read, it is made invisible to other consumers for a specified interval. If the message has not yet been deleted at the time the interval expires, its visibility is restored, so that another consumer may process it.
     #' @return
     #' A new object of class [`QueueMessage`].
-    get_message=function() {
+    get_message=function()
+    {
         new_message(do_container_op(self, "messages")$QueueMessage, self)
     },
 
@@ -115,7 +143,8 @@ public=list(
     #' @param n How many messages to read. The maximum is 32.
     #' @return
     #' A list of objects of class [`QueueMessage`].
-    get_messages=function(n=1) {
+    get_messages=function(n=1)
+    {
         opts <- list(numofmessages=n)
         lapply(do_container_op(self, "messages", options=opts), new_message, queue=self)
     },
@@ -126,7 +155,8 @@ public=list(
     #' Note that a message obtained via the `peek_message` or `peek_messages` method will not include a pop receipt, which is required to delete or update it.
     #' @return
     #' A new object of class [`QueueMessage`].
-    peek_message=function() {
+    peek_message=function()
+    {
         opts <- list(peekonly=TRUE)
         new_message(do_container_op(self, "messages", options=opts)$QueueMessage, self)
     },
@@ -138,7 +168,8 @@ public=list(
     #' @param n How many messages to read. The maximum is 32.
     #' @return
     #' A list of objects of class [`QueueMessage`].
-    peek_messages=function(n=1) {
+    peek_messages=function(n=1)
+    {
         opts <- list(peekonly=TRUE, numofmessages=n)
         lapply(do_container_op(self, "messages", options=opts), new_message, queue=self)
     },
@@ -147,7 +178,8 @@ public=list(
     #' Reads a message from the storage queue, removing it at the same time. This is equivalent to calling [`get_message`](#method-get_message) and [`delete_message`](#method-delete_message) successively.
     #' @return
     #' A new object of class [`QueueMessage`].
-    pop_message=function() {
+    pop_message=function()
+    {
         msg <- self$get_message()
         msg$delete()
         msg
@@ -158,7 +190,8 @@ public=list(
     #' @param n How many messages to read. The maximum is 32.
     #' @return
     #' A list of objects of class [`QueueMessage`].
-    pop_messages=function(n=1) {
+    pop_messages=function(n=1)
+    {
         msgs <- self$get_messages(n)
         lapply(msgs, function(msg) msg$delete())
         msgs

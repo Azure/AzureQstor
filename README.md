@@ -19,7 +19,7 @@ qu2 <- create_storage_queue(endp, "myqueue2")
 delete_storage_queue(qu2)
 ```
 
-The queue object exposes methods for getting (reading), peeking, popping (reading and deleting) and putting (writing) messages.
+The queue object exposes methods for getting (reading), peeking, deleting, updating, popping (reading and deleting) and putting (writing) messages:
 
 ```r
 qu$put_message("Hello queue")
@@ -27,11 +27,22 @@ msg <- qu$get_message()
 
 msg$text
 ## [1] "Hello queue"
+
+# get several messages at once
+qu$get_messages(n=30)
 ```
 
-The message object exposes methods for deleting and updating the message.
+The message object exposes methods for deleting and updating the message:
 
 ```r
 msg$update(visibility_timeout=30, text="Updated message")
 msg$delete()
 ```
+
+You can get and set metadata for a queue with the AzureStor `get/set_storage_metadata` generics:
+
+```r
+get_storage_metadata(qu)
+set_storage_metadata(qu, name1="value1", name2="value2")
+```
+

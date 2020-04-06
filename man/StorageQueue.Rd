@@ -69,6 +69,8 @@ AzureRMR::delete_pool()
 \item \href{#method-create}{\code{StorageQueue$create()}}
 \item \href{#method-delete}{\code{StorageQueue$delete()}}
 \item \href{#method-clear}{\code{StorageQueue$clear()}}
+\item \href{#method-get_metadata}{\code{StorageQueue$get_metadata()}}
+\item \href{#method-set_metadata}{\code{StorageQueue$set_metadata()}}
 \item \href{#method-get_message}{\code{StorageQueue$get_message()}}
 \item \href{#method-get_messages}{\code{StorageQueue$get_messages()}}
 \item \href{#method-peek_message}{\code{StorageQueue$peek_message()}}
@@ -138,6 +140,41 @@ Clears (deletes) all messages in this storage queue.
 \if{html}{\out{<div class="r">}}\preformatted{StorageQueue$clear()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_metadata"></a>}}
+\if{latex}{\out{\hypertarget{method-get_metadata}{}}}
+\subsection{Method \code{get_metadata()}}{
+Retrieves user-defined metadata for the queue.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{StorageQueue$get_metadata()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A named list of metadata properties.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-set_metadata"></a>}}
+\if{latex}{\out{\hypertarget{method-set_metadata}{}}}
+\subsection{Method \code{set_metadata()}}{
+Sets user-defined metadata for the queue.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{StorageQueue$set_metadata(..., keep_existing = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Name-value pairs to set as metadata.}
+
+\item{\code{keep_existing}}{Whether to retain existing metadata information.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A named list of metadata properties, invisibly.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_message"></a>}}
