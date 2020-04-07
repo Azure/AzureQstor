@@ -1,6 +1,6 @@
 Package: AzureQstor
 Title: Interface to 'Azure Queue Storage'
-Version: 0.0.1
+Version: 0.9.9.9000
 Authors@R: c(
     person("Hong", "Ooi", , "hongooi@microsoft.com", role = c("aut", "cre")),
     person("Microsoft", role="cph")
