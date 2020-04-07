@@ -1,5 +1,7 @@
-# AzureQstor
+# AzureQstor <img src="man/figures/logo.png" align="right" width=150 />
 
+[![CRAN](https://www.r-pkg.org/badges/version/AzureQstor)](https://cran.r-project.org/package=AzureQstor)
+![Downloads](https://cranlogs.r-pkg.org/badges/AzureQstor)
 [![Build Status](https://asiadatascience.visualstudio.com/AzureR/_apis/build/status/Azure.AzureQstor?branchName=master)](https://asiadatascience.visualstudio.com/AzureR/_build/latest?definitionId=18&branchName=master)
 
 An R interface to Azure queue storage, building on the functionality provided by [AzureStor](https://github.com/Azure/AzureStor).
@@ -50,3 +52,5 @@ get_storage_metadata(qu)
 set_storage_metadata(qu, name1="value1", name2="value2")
 ```
 
+---
+<p align="center"><a href="https://github.com/Azure/AzureR"><img src="https://github.com/Azure/AzureR/raw/master/images/logo2.png" width=800 /></a></p>
