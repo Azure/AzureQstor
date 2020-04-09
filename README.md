@@ -4,7 +4,7 @@
 ![Downloads](https://cranlogs.r-pkg.org/badges/AzureQstor)
 [![Build Status](https://asiadatascience.visualstudio.com/AzureR/_apis/build/status/Azure.AzureQstor?branchName=master)](https://asiadatascience.visualstudio.com/AzureR/_build/latest?definitionId=18&branchName=master)
 
-An R interface to Azure queue storage, building on the functionality provided by [AzureStor](https://github.com/Azure/AzureStor).
+An R interface to [Azure queue storage](https://azure.microsoft.com/services/storage/queues), building on the functionality provided by [AzureStor](https://github.com/Azure/AzureStor).
 
 The primary repo for this package is at https://github.com/Azure/AzureQstor; please submit issues and PRs there. It is also mirrored at the Cloudyr org at https://github.com/cloudyr/AzureQstor. You can install the development version of the package with `devtools::install_github("Azure/AzureQstor")`.
 
