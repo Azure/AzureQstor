@@ -5,7 +5,7 @@ Authors@R: c(
     person("Hong", "Ooi", , "hongooi@microsoft.com", role = c("aut", "cre")),
     person("Microsoft", role="cph")
     )
-Description: An interface to 'Azure Queue Storage'. Part of the 'AzureR' family of packages.
+Description: An interface to 'Azure Queue Storage'. This is a cloud service for storing large numbers of messages, for example from automated sensors, that can be accessed remotely via authenticated calls using HTTP or HTTPS. Queue storage is often used to create a backlog of work to process asynchronously. Part of the 'AzureR' family of packages.
 URL: https://github.com/Azure/AzureQstor https://github.com/Azure/AzureR
 BugReports: https://github.com/Azure/AzureQstor/issues
 License: MIT + file LICENSE
