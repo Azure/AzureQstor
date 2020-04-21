@@ -86,8 +86,23 @@ The content of a message is in its `text` field, which will (usually) be a text 
 
 ```r
 msg$text
-## [1] New message
+## [1] "New message"
 ```
 
+## Metadata
 
+You can get and set metadata for a queue object with the `get/set_metadata` R6 methods. If you prefer S3, you can also use the AzureStor `get/set_storage_metadata` S3 generics, which have methods for queue objects.
 
+```r
+set_storage_metadata(qu, name1="value1", name2="value2")
+get_storage_metadata(qu)
+## $name1
+## [1] "value1"
+##
+## $name2
+## [1] "value2"
+
+# same as above
+qu$set_metadata(name1="value1", name2="value2")
+qu$get_metadata()
+```
