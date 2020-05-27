@@ -25,6 +25,3 @@ get_classic_metadata_headers <- getNamespace("AzureStor")$get_classic_metadata_h
 
 set_classic_metadata_headers <- getNamespace("AzureStor")$set_classic_metadata_headers
 
-
-# tag xml2 to satisfy R CMD check
-xml2::as_xml_document

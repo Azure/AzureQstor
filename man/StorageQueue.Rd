@@ -114,6 +114,9 @@ Creates a storage queue in Azure, using the storage endpoint and name from this 
 \if{html}{\out{<div class="r">}}\preformatted{StorageQueue$create()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+The queue object, invisibly.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-delete"></a>}}
@@ -130,6 +133,9 @@ Deletes this storage queue in Azure.
 \item{\code{confirm}}{Whether to ask for confirmation before deleting.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The queue object, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -304,6 +310,9 @@ Writes a message to the back of the message queue.
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+The message text, invisibly.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-update_message"></a>}}
@@ -326,6 +335,9 @@ This operation can be used to continually extend the invisibility of a queue mes
 \item{\code{text}}{Optionally, new message text, either a raw or character vector. If a raw vector, it is base64-encoded, and if a character vector, it is collapsed into a single string before being sent to the queue.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The message object, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

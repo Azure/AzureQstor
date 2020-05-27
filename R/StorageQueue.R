@@ -73,6 +73,8 @@ public=list(
 
     #' @description
     #' Creates a storage queue in Azure, using the storage endpoint and name from this R6 object.
+    #' @return
+    #' The queue object, invisibly.
     create=function()
     {
         do_container_op(self, http_verb="PUT")
@@ -82,6 +84,8 @@ public=list(
     #' @description
     #' Deletes this storage queue in Azure.
     #' @param confirm Whether to ask for confirmation before deleting.
+    #' @return
+    #' The queue object, invisibly.
     delete=function(confirm=TRUE)
     {
         if(!delete_confirmed(confirm, paste0(self$endpoint$url, name), "queue"))
@@ -93,9 +97,12 @@ public=list(
 
     #' @description
     #' Clears (deletes) all messages in this storage queue.
+    #' @return
+    #' The queue object, invisibly.
     clear=function()
     {
         do_container_op(self, "messages", http_verb="DELETE")
+        invisible(self)
     },
 
     #' @description
@@ -121,7 +128,7 @@ public=list(
         else list(...)
 
         do_container_op(self, options=list(comp="metadata"), headers=set_classic_metadata_headers(meta),
-                        http_verb = "PUT")
+                        http_verb="PUT")
         invisible(meta)
     },
 
@@ -202,6 +209,8 @@ public=list(
     #' @param text The message text, either a raw or character vector. If a raw vector, it is base64-encoded, and if a character vector, it is collapsed into a single string before being sent to the queue.
     #' @param visibility_timeout Optional visibility timeout after being read, in seconds. The default is 30 seconds.
     #' @param time_to_live Optional message time-to-live, in seconds. The default is 7 days.
+    #' @return
+    #' The message text, invisibly.
     put_message=function(text, visibility_timeout=NULL, time_to_live=NULL)
     {
         text <- if(is.raw(text))
@@ -229,6 +238,8 @@ public=list(
     #' @param msg A message object, of class [`QueueMessage`].
     #' @param visibility_timeout The new visibility timeout (time to when the message will again be visible).
     #' @param text Optionally, new message text, either a raw or character vector. If a raw vector, it is base64-encoded, and if a character vector, it is collapsed into a single string before being sent to the queue.
+    #' @return
+    #' The message object, invisibly.
     update_message=function(msg, visibility_timeout, text=msg$text)
     {
         stopifnot(inherits(msg, "QueueMessage"))

@@ -8,6 +8,8 @@
 #'
 #' @details
 #' This is the queue storage counterpart to the endpoint functions defined in the AzureStor package.
+#' @return
+#' An object of class `queue_endpoint`, inheriting from `storage_endpoint`.
 #' @seealso
 #' [`AzureStor::storage_endpoint`], [`AzureStor::blob_endpoint`], [`storage_queue`]
 #' @examples

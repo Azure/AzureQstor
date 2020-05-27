@@ -23,6 +23,9 @@ queue_endpoint(
 
 \item{api_version}{The storage API version to use when interacting with the host. Defaults to \code{"2019-07-07"}.}
 }
+\value{
+An object of class \code{queue_endpoint}, inheriting from \code{storage_endpoint}.
+}
 \description{
 Create a queue endpoint object
 }

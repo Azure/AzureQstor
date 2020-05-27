@@ -80,6 +80,9 @@ Deletes this message from the queue.
 \if{html}{\out{<div class="r">}}\preformatted{QueueMessage$delete()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+NULL, invisibly.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-update"></a>}}
@@ -101,6 +104,9 @@ This operation can be used to continually extend the invisibility of a queue mes
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+The message object, invisibly.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-print"></a>}}
@@ -117,6 +123,9 @@ Print method for this class.
 \item{\code{...}}{Not currently used.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The message object, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

@@ -62,6 +62,8 @@ public=list(
 
     #' @description
     #' Deletes this message from the queue.
+    #' @return
+    #' NULL, invisibly.
     delete=function()
     {
         private$check_receipt()
@@ -76,6 +78,8 @@ public=list(
     #' This operation can be used to continually extend the invisibility of a queue message. This functionality can be useful if you want a worker role to "lease" a message. For example, if a worker role calls [`get_messages`][StorageQueue] and recognizes that it needs more time to process a message, it can continually extend the message's invisibility until it is processed. If the worker role were to fail during processing, eventually the message would become visible again and another worker role could process it.
     #' @param visibility_timeout The new visibility timeout (time to when the message will again be visible).
     #' @param text Optionally, new message text, either a raw or character vector. If a raw vector, it is base64-encoded, and if a character vector, it is collapsed into a single string before being sent to the queue.
+    #' @return
+    #' The message object, invisibly.
     update=function(visibility_timeout, text=self$text)
     {
         private$check_receipt()
@@ -101,6 +105,8 @@ public=list(
     #' @description
     #' Print method for this class.
     #' @param ... Not currently used.
+    #' @return
+    #' The message object, invisibly.
     print=function(...)
     {
         cat("<queue message ", self$id, ">\n", sep="")
