@@ -17,7 +17,7 @@ queue_endpoint(
 
 \item{key}{The access key for the storage account.}
 
-\item{token}{An Azure Active Directory (AAD) authentication token. This can be either a string, or an object of class AzureToken created by \link[AzureRMR:get_azure_token]{AzureRMR::get_azure_token}. The latter is the recommended way of doing it, as it allows for automatic refreshing of expired tokens.}
+\item{token}{An Azure Active Directory (AAD) authentication token. This can be either a string, or an object of class AzureToken created by \link[AzureRMR:reexports]{AzureRMR::get_azure_token}. The latter is the recommended way of doing it, as it allows for automatic refreshing of expired tokens.}
 
 \item{sas}{A shared access signature (SAS) for the account.}
 
@@ -48,5 +48,5 @@ queue_endpoint("https://mystorage.queue.core.windows.net/", key="access_key")
 }
 }
 \seealso{
-\code{\link[AzureStor:storage_endpoint]{AzureStor::storage_endpoint}}, \code{\link[AzureStor:blob_endpoint]{AzureStor::blob_endpoint}}, \code{\link{storage_queue}}
+\code{\link[AzureStor:storage_endpoint]{AzureStor::storage_endpoint}}, \code{\link[AzureStor:storage_endpoint]{AzureStor::blob_endpoint}}, \code{\link{storage_queue}}
 }

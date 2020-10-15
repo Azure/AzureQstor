@@ -147,6 +147,9 @@ Clears (deletes) all messages in this storage queue.
 \if{html}{\out{<div class="r">}}\preformatted{StorageQueue$clear()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+The queue object, invisibly.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_metadata"></a>}}
